@@ -1,4 +1,4 @@
-package ngram
+package qgram
 
 import (
 	"io"
@@ -48,7 +48,7 @@ func CalcMap(in io.Reader) map[string]int {
 		}
 
 		for _, r := range w {
-			if !unicode.IsLetter(r) && r != '-' {
+			if !unicode.IsLetter(r) && r != '-' && r != '\'' {
 				return
 			}
 		}
