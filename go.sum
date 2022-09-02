@@ -1,2 +1,4 @@
-github.com/wmentor/tokens v1.0.0 h1:OkPv+dvE+r2gOeJdTJExDvocavstfmp8X6fO43XKdAo=
-github.com/wmentor/tokens v1.0.0/go.mod h1:2Vw6+Br138zGpi+jnt5UUatsGckZPQBYQ4F/WqG7taA=
+github.com/wmentor/tbuf v1.0.0 h1:KHfiIdOTWor7a/5dSoLovxgGuipLAAU1X4+U3jzdIZ4=
+github.com/wmentor/tbuf v1.0.0/go.mod h1:YvYY3BMph/UVPSIMbQoraxgr7+7DCAvYSSJHZk2gsBQ=
+github.com/wmentor/tokens v1.0.5 h1:M6c3lcunuzM8zKaJen07zp3v2mw7I6qgiWkVuw95ntU=
+github.com/wmentor/tokens v1.0.5/go.mod h1:6iacaTHgxf5CaRPWTHGMfHG9ysvj9kVFu9OvHkJLjtc=

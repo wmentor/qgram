@@ -10,26 +10,9 @@ import (
 
 // calc qgram frequency map
 func CalcMap(in io.Reader) map[string]int {
-
 	result := make(map[string]int)
 
-	var st1, st2, st3 string
-
-	i := 0
-
-	pushRune := func(r rune) {
-		str := string(r)
-
-		i++
-
-		if i >= 4 {
-			result[st1+str]++
-		}
-
-		st1 = st2 + str
-		st2 = st3 + str
-		st3 = str
-	}
+	pushRune := makeCollector(result)
 
 	pushWord := func(word string) {
 		for _, r := range word {
@@ -41,16 +24,16 @@ func CalcMap(in io.Reader) map[string]int {
 
 	wCnt := 0
 
-	tokens.Process(in, func(w string) {
+	tokenizer := tokens.New(in)
 
-		if w == "-" {
-			return
+	for {
+		token, err := tokenizer.Token()
+		if err != nil {
+			break
 		}
 
-		for _, r := range w {
-			if !unicode.IsLetter(r) && r != '-' && r != '\'' {
-				return
-			}
+		if !checkWord(token) {
+			continue
 		}
 
 		if wCnt > 0 {
@@ -59,8 +42,8 @@ func CalcMap(in io.Reader) map[string]int {
 
 		wCnt++
 
-		pushWord(w)
-	})
+		pushWord(token)
+	}
 
 	pushRune('_')
 	pushRune('_')
@@ -75,7 +58,7 @@ func QGrams(in io.Reader) []string {
 	for ng := range hash {
 		list = append(list, ng)
 	}
-	sort.Sort(sort.StringSlice(list))
+	sort.Strings(list)
 	return list
 }
 
@@ -102,7 +85,6 @@ func Popular(in io.Reader, limit int) []string {
 }
 
 func mapSimilarity(m1, m2 map[string]int) float64 {
-
 	all := map[string]bool{}
 	both := map[string]bool{}
 
@@ -127,4 +109,40 @@ func mapSimilarity(m1, m2 map[string]int) float64 {
 // calc text similarity
 func Similarity(in1 io.Reader, in2 io.Reader) float64 {
 	return mapSimilarity(CalcMap(in1), CalcMap(in2))
+}
+
+func checkWord(word string) bool {
+	if word == "-" {
+		return false
+	}
+
+	for _, r := range word {
+		if !unicode.IsLetter(r) && r != '-' && r != '\'' {
+			return false
+		}
+	}
+
+	return true
+}
+
+func makeCollector(result map[string]int) func(rune) {
+	var strs [3]string
+
+	i := 0
+
+	pushRune := func(r rune) {
+		str := string(r)
+
+		i++
+
+		if i >= 4 {
+			result[strs[0]+str]++
+		}
+
+		strs[0] = strs[1] + str
+		strs[1] = strs[2] + str
+		strs[2] = str
+	}
+
+	return pushRune
 }

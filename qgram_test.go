@@ -8,6 +8,7 @@ import (
 func TestNGram(t *testing.T) {
 
 	tL := func(src string, wait string) {
+		t.Helper()
 		list := QGrams(strings.NewReader(src))
 		if strings.Join(list, " ") != wait {
 			println("wait: " + wait)
@@ -17,6 +18,7 @@ func TestNGram(t *testing.T) {
 	}
 
 	tP := func(src string, wait string) {
+		t.Helper()
 		list := Popular(strings.NewReader(src), 30)
 		if strings.Join(list, " ") != wait {
 			println("wait: " + wait)
@@ -26,6 +28,7 @@ func TestNGram(t *testing.T) {
 	}
 
 	tSim := func(t1 string, t2 string, wait float64) {
+		t.Helper()
 		sim := Similarity(strings.NewReader(t1), strings.NewReader(t2))
 		simI := int(sim*1000000 + 0.5)
 		waitI := int(wait * 1000000)
